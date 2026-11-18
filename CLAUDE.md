@@ -8,6 +8,8 @@ This repo generates a 3D-printable Christmas ornament of the EMSS logo for a Bam
 - `emss_ornament_base.stl` — backing plate with a hanging loop.
 - `emss_ornament_logo.stl` — raised EMSS letters that sit on top of the plate.
 - `emss_ornament_combined.stl` — base and logo in one file for single-color printing.
+- `emss_logo.svg` — the original EMSS logo as a standalone SVG, converted from the Maestro `EMSSLogo` component. All shapes are filled white, so it looks blank on a white background.
+- `check_stl.py` — checks that generated meshes are closed.
 
 The STL files are committed so they can be opened in Bambu Studio on another machine without running the script.
 
@@ -21,7 +23,7 @@ Rerun this and commit the updated STL files after changing any dimension.
 
 ## How the script works
 
-- The logo path data is copied from the `EMSSLogo` SVG component in the Maestro repo (`viewBox 0 0 97 18`). The script parses only absolute `M`, `L`, `H`, `V`, `C`, and `Z` commands.
+- The logo path data in `LOGO_PATHS` is copied by hand from `emss_logo.svg` (`viewBox 0 0 97 18`). The SVG's one `<rect>` is written as an equivalent path. If the SVG changes, update `LOGO_PATHS` to match. The script parses only absolute `M`, `L`, `H`, `V`, `C`, and `Z` commands.
 - Cubic Bezier curves are flattened into line segments, and the Y axis is flipped because SVG Y points down.
 - Each logo shape is convex, so it is triangulated with a fan and extruded into a prism. `assert_convex` exits if a shape is not convex. Shapes that are not convex, such as the NASA meatball, would need a real polygon triangulation (for example, ear clipping) first.
 - The hanging loop is a separate ring mesh that overlaps the plate edge. The slicer merges overlapping shells into one solid.
